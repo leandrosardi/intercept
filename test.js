@@ -4,8 +4,10 @@ https://www.linkedin.com/search/results/content/?keywords=%22I%20attended%22%20o
 */
 
 var s = null; // response text
+var x = null; // response text first line
 var t = null; // response text wrapped in array
 var j = null; // response json
+var ar = null;
 
 (function (XHR) {
     "use strict";
@@ -31,18 +33,22 @@ console.log("Ready URL: " + this._url);
                 if (this._url == '/api/graphql/') {
 s = self.responseText;
 // if s starts with '{"data":{"viewer":{"news_feed":' and t is null
-if (s.startsWith('{"data":{"viewer":{"news_feed":') && t == null) {
+if (s.startsWith('{"data":{"viewer":{"news_feed":') /*&& a == null*/) {
     // JSON is not a valid json, you must wrap it in array.
     // reference: https://stackoverflow.com/questions/51172387/json-parse-unexpected-non-whitespace-character-after-json-data-at-line-1-column
-    let x = s.split("\n")[0]
+    ar = s.split("\n");
+    x = ar[0];
     t = '['+x+']';
     j = JSON.parse(t);
 
     // post
     let posts = j[0].data.viewer.news_feed.edges; 
+console.log('POSTS: '+posts.length.toString()+' posts found');
+    /*
     let o = posts[0];
 
     // post content, 
+    // TODO: VALIDATE MESSAGE IS NOT NULL
     let a = o.node.comet_sections.content.story.message.text;
 
     // URL of all photos in the post,
@@ -52,11 +58,11 @@ if (s.startsWith('{"data":{"viewer":{"news_feed":') && t == null) {
     let c = o.node.post_id;
 
     // direct id or link to the Facebook group where such content has been posted,
-    let d = o.node.feedback.associated_group.id;
-
     // name of the facebook groups
+    let d = o.node.comet_sections.context_layout.story.comet_sections.actor_photo.story.to;
+    // d.id
+    // d.name
     
-
     // name of the Facebook user who posted,
     // link to the Facebook profile of such a user,
     // URL of the picture of such a Facebook user.
@@ -66,7 +72,7 @@ if (s.startsWith('{"data":{"viewer":{"news_feed":') && t == null) {
     e.name
     e.url
     e.profile_picture.uri
-
+    */
 }
                 }
 
