@@ -10,6 +10,9 @@ var interceptJs = {
     // array of collected data
     data: [],
 
+    // all responses processed by the interceptor - for internal use only
+    xhrs: [],
+
 	// return the version if this interceptJs library.
     version: function() {
         return '0.0.2';
@@ -61,6 +64,10 @@ var interceptJs = {
 
                 function onReadyStateChange() {
                     if (this.readyState == 4 && this.status == 200) {
+
+                        // add the response to the xhrs array
+                        interceptJs.xhrs.push(this);
+
                         /* This is where you can put code that you want to execute post-complete*/
                         /* URL is kept in this._url */
                         if (interceptJs.parse != null) {
@@ -110,6 +117,7 @@ interceptJs.init({
             s = xhr.responseText;
             // if s starts with '{"data":{"viewer":{"news_feed":' and t is null
             //if (s.startsWith('{"data":{"viewer":{"news_feed":') && a == null) {
+//if (s.startsWith('{"label":"CometNewsFeed_viewerConnection$stream$CometNewsFeed_viewer_news_feed"')) {
             if (s.startsWith('{"data":{"viewer":{"news_feed":')) {
                 // JSON is not a valid json, you must wrap it in array.
                 // reference: https://stackoverflow.com/questions/51172387/json-parse-unexpected-non-whitespace-character-after-json-data-at-line-1-column
@@ -119,7 +127,9 @@ interceptJs.init({
                 j = JSON.parse(t);
 
                 // post
-                let posts = j[0].data.viewer.news_feed.edges; 
+                let o = j[0].data.viewer.news_feed.edges[0]; 
+//let o = j[0].data
+
                 console.log('POSTS: '+posts.length.toString()+' posts found');
 
                 let o = posts[0];
