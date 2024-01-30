@@ -90,6 +90,8 @@ var interceptJs = {
 };
 
 
+var h = null;
+
 interceptJs.init({
     parse: function(xhr) {
         // show the request url by default
@@ -100,8 +102,10 @@ interceptJs.init({
         var t = null; // response text wrapped in array
         var j = null; // response json
         var ar = null;
+        var obj = {}; // response json in massprospecting format 
 
         console.log("Ready URL: " + xhr._url);
+
         if (xhr._url == '/api/graphql/') {
             s = xhr.responseText;
             // if s starts with '{"data":{"viewer":{"news_feed":' and t is null
@@ -117,36 +121,51 @@ interceptJs.init({
                 // post
                 let posts = j[0].data.viewer.news_feed.edges; 
                 console.log('POSTS: '+posts.length.toString()+' posts found');
+
                 let o = posts[0];
 
                 // post content, 
                 // TODO: VALIDATE MESSAGE IS NOT NULL
-                let a = o.node.comet_sections.content.story.message.text;
+                let a = o.node.comet_sections.content.story.message;
+                if (a == null) {
+                    obj['body'] = null;
+                } else {
+                    obj['body'] = a.text;
+                }
 
                 // URL of all photos in the post,
                 let b = o.node.comet_sections.content.story.attachments; 
+                obj['images'] = [];
+                // iterate array b
+                for (let i = 0; i < b.length; i++) {
+                    obj['images'].push( b[i].styles.attachment.media.photo_image.uri );
+                }
 
                 // direct id or link to the post, 
                 let c = o.node.post_id;
+                obj['post_id'] = c;
 
                 // direct id or link to the Facebook group where such content has been posted,
                 // name of the facebook groups
                 let d = o.node.comet_sections.context_layout.story.comet_sections.actor_photo.story.to;
-                // d.id
-                // d.name
+                obj['group'] = {}
+                obj['group']['id'] = d.id;
+                obj['group']['name'] = d.name;
                 
                 // name of the Facebook user who posted,
                 // link to the Facebook profile of such a user,
                 // URL of the picture of such a Facebook user.
                 //let e = o.node.comet_sections.content.story.actors[0];
                 let e = o.node.comet_sections.context_layout.story.comet_sections.actor_photo.story.actors[0];
-                e.id
-                e.name
-                e.url
-                e.profile_picture.uri
+                obj['lead'] = {}
+                obj['lead']['id'] = e.id;
+                obj['lead']['name'] = e.name;
+                obj['lead']['url'] = e.url;
+                obj['lead']['profile_picture'] = e.profile_picture.uri
+
+                // add this result to the data array
+                interceptJs.push(obj);
             }
         }
-
-
     }
 });
