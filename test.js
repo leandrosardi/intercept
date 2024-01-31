@@ -257,6 +257,7 @@ var facebook_group_posts = {
 };
 
 // ----------------------------
+var aux = null;
 var facebook_public_feed = {
     // browser must be located at this URL: https://www.facebook.com/?filter=groups&sk=h_chr
     // perform an AJAX request to reload the list of posts.
@@ -293,99 +294,115 @@ var facebook_public_feed = {
                 t = '['+x+']';
                 j = JSON.parse(t)[0];
                 
-// TODO: ITERATE ALL EDGES
                 if (x.startsWith('{"data":{"serpResponse":{"results":{"edges":')) {
-                    o = j.data.serpResponse.results.edges[0];
-                }
+                    edges = j.data.serpResponse.results.edges;
     
-                if (o != null) {
-                    // add the raw json descriptor to the object
-                    // for further analysis and debugging.
-                    obj['raw'] = o;
+                    // iterate array edges
+                    for (let i0 = 0; i0 < edges.length; i0++) {
+                        o = edges[i0];
 
-                    //console.log('------------------');
+                        // add the raw json descriptor to the object
+                        // for further analysis and debugging.
+                        obj['raw'] = o;
 
-                    // # of comments
-                    obj['comments'] = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.feedback.story.feedback_context.feedback_target_with_context.ufi_renderer.feedback.comet_ufi_summary_and_actions_renderer.feedback.comments_count_summary_renderer.feedback.total_comment_count
+                        //console.log('------------------');
 
-                    // # of reactions
-                    obj['reactions'] = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.feedback.story.feedback_context.feedback_target_with_context.ufi_renderer.feedback.comet_ufi_summary_and_actions_renderer.feedback.reaction_count.count
+                        // # of comments
+                        obj['comments'] = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.feedback.story.feedback_context.feedback_target_with_context.ufi_renderer.feedback.comet_ufi_summary_and_actions_renderer.feedback.comments_count_summary_renderer.feedback.total_comment_count
 
-                    // # of shares
-                    obj['shares'] = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.feedback.story.feedback_context.feedback_target_with_context.ufi_renderer.feedback.comet_ufi_summary_and_actions_renderer.feedback.i18n_share_count
+                        // # of reactions
+                        obj['reactions'] = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.feedback.story.feedback_context.feedback_target_with_context.ufi_renderer.feedback.comet_ufi_summary_and_actions_renderer.feedback.reaction_count.count
 
-                    // post content, 
-                    let a = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.content.story.comet_sections.message.story.message
-                    if (a == null) {
-                        obj['body'] = null;
-                    } else {
-                        obj['body'] = a.text;
-                        //console.log('BODY: ' + obj['body']);
-                    }
+                        // # of shares
+                        obj['shares'] = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.feedback.story.feedback_context.feedback_target_with_context.ufi_renderer.feedback.comet_ufi_summary_and_actions_renderer.feedback.i18n_share_count
 
-                    // URL of all photos in the post,
-                    let b = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.content.story.attachments;
-                    obj['images'] = [];
-                    // iterate array b
-                    for (let i = 0; i < b.length; i++) {
-                        // if it is an image, add it to the images array
-                        let attachment = b[i].styles.attachment;
-                        if (attachment != null && attachment != undefined) {
-                            let media = attachment.media;
-                            if (media != null && media != undefined) {
-                                let img = media.photo_image;
-                                if (img != null && img != undefined) {
-                                    obj['images'].push( img.uri );
-                                }                        
+                        // post content, 
+                        let a0 = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.content.story.comet_sections.message
+                        if (a0 != null && a0 != undefined) {
+                            let a = a0.story.message
+                            if (a == null) {
+                                obj['body'] = null;
+                            } else {
+                                obj['body'] = a.text;
+                                //console.log('BODY: ' + obj['body']);
                             }
-                            // if the is a list of sub-attachments, iterate it
-                            let subattachments = attachment.all_subattachments;
-                            if (subattachments != null && subattachments != undefined) {
-                                for (let i2 = 0; i2 < subattachments.nodes.length; i2++) {
-                                    let img = subattachments.nodes[i2].media.image;
+                        }
+
+                        // URL of all photos in the post,
+                        let b = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.content.story.attachments;
+                        obj['images'] = [];
+                        // iterate array b
+                        for (let i = 0; i < b.length; i++) {
+                            // if it is an image, add it to the images array
+                            let attachment = b[i].styles.attachment;
+                            if (attachment != null && attachment != undefined) {
+                                let media = attachment.media;
+                                if (media != null && media != undefined) {
+                                    let img = media.photo_image;
                                     if (img != null && img != undefined) {
                                         obj['images'].push( img.uri );
                                     }                        
                                 }
-                            }
-                        } // end if attachment
-                    }
-                    
-                    // direct id or link to the post, 
-                    let c = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.feedback.story.shareable_from_perspective_of_feed_ufi.post_id;
-                    obj['post_id'] = c;
-/*
-                    // direct id or link to the Facebook group where such content has been posted,
-                    // name of the facebook groups
-                    let d = o.node.comet_sections.context_layout.story.comet_sections.actor_photo.story.to;
-                    obj['group'] = {}
-                    obj['group']['id'] = d.id;
-                    obj['group']['name'] = d.name;
-                    
-                    //console.log('GROUP: ' + obj['group']['name']);
-*/
-                    // name of the Facebook user who posted,
-                    // link to the Facebook profile of such a user,
-                    // URL of the picture of such a Facebook user.
-                    //let e = o.node.comet_sections.content.story.actors[0];
-                    let e = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.content.story.comet_sections.context_layout.story.comet_sections.actor_photo.story.actors[0]
-                    obj['lead'] = {}
-                    obj['lead']['id'] = e.id;
-                    obj['lead']['name'] = e.name;
-                    obj['lead']['url'] = e.url;
-                    obj['lead']['profile_picture'] = e.profile_picture.uri
-
-                    // if not exists and object into $$.data with the same post_id,
-                    // add this result to the data array
-                    let exists = false;
-                    for (let i = 0; i < $$.data.length; i++) {
-                        if ($$.data[i]['post_id'] == obj['post_id']) {
-                            exists = true;
+                                // if the is a list of sub-attachments, iterate it
+                                let subattachments = attachment.all_subattachments;
+                                if (subattachments != null && subattachments != undefined) {
+                                    for (let i2 = 0; i2 < subattachments.nodes.length; i2++) {
+                                        let img = subattachments.nodes[i2].media.image;
+                                        if (img != null && img != undefined) {
+                                            obj['images'].push( img.uri );
+                                        }                        
+                                    }
+                                }
+                            } // end if attachment
+                        } // end for attachments
+                        
+                        // direct id or link to the post, 
+                        let c = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.feedback.story.shareable_from_perspective_of_feed_ufi.post_id;
+                        obj['post_id'] = c;
+                        /*
+                        // direct id or link to the Facebook group where such content has been posted,
+                        // name of the facebook groups
+                        let d = o.node.comet_sections.context_layout.story.comet_sections.actor_photo.story.to;
+                        obj['group'] = {}
+                        obj['group']['id'] = d.id;
+                        obj['group']['name'] = d.name;
+                        
+                        //console.log('GROUP: ' + obj['group']['name']);
+                        */
+                        // name of the Facebook user who posted,
+                        // link to the Facebook profile of such a user,
+                        // URL of the picture of such a Facebook user.
+                        //let e = o.node.comet_sections.content.story.actors[0];
+                        //
+                        // if it is a reel, it is not a post from a lead (eg: a reel from a page)
+                        obj['lead'] = null;
+                        let e0 = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.content.story.comet_sections.context_layout;
+                        if (e0 != null && e0 != undefined) {
+                            let e = e0.story.comet_sections.actor_photo.story.actors[0]
+                            obj['lead'] = {}
+                            obj['lead']['id'] = e.id;
+                            obj['lead']['name'] = e.name;
+                            obj['lead']['url'] = e.url;
+                            obj['lead']['profile_picture'] = e.profile_picture.uri
                         }
-                    }
-                    if (!exists) {
-                        $$.push(obj);
-                    }
+
+                        // if not exists and object into $$.data with the same post_id,
+                        // add this result to the data array
+                        //
+                        // if it is a reel, it is not a post from a lead (eg: a reel from a page)
+                        if (obj['lead'] != null) {
+                            let exists = false;
+                            for (let i = 0; i < $$.data.length; i++) {
+                                if ($$.data[i]['post_id'] == obj['post_id']) {
+                                    exists = true;
+                                }
+                            }
+    
+                            if (!exists) {
+                                $$.push(obj);
+                            }    
+                        }
+                    } // end for edges
                 }
             }
         }
@@ -396,7 +413,7 @@ var facebook_public_feed = {
 
 $$.init({
     parse: function(xhr) {
-        facebook_public_feed.scrape(xhr);
+        facebook_group_posts.scrape(xhr);
     }
 });
 
