@@ -9,14 +9,18 @@ https://www.linkedin.com/search/results/content/?keywords=%22I%20attended%22%20o
 
 
 var interceptJs = {
+    // oroginal XMLHttpRequest methods
+    open: null,
+    send: null,
+
     // flag to pause the interceptor
     paused: false,
 
-    // array of collected data
+    // array of data collected from the responses - IT IS NOT THE DATA OM THR REQUEST
     data: [],
 
-    // all responses processed by the interceptor - for internal use only
-    xhrs: [],
+    // all calls, including URL, data and response processed by the interceptor - for internal use only
+    calls: [],
 
 	// return the version if this interceptJs library.
     version: function() {
@@ -56,12 +60,12 @@ var interceptJs = {
             "use strict";
             console.log("Intercept.Js v" + interceptJs.version());
             
-            var open = XHR.prototype.open;
-            var send = XHR.prototype.send;
+            $$.open = XHR.prototype.open;
+            $$.send = XHR.prototype.send;
 
             XHR.prototype.open = function (method, url, async, user, pass) {
                 this._url = url;
-                open.call(this, method, url, async, user, pass);
+                $$.open.call(this, method, url, async, user, pass);
             };
 
             XHR.prototype.send = function (data) {
@@ -71,8 +75,12 @@ var interceptJs = {
                 function onReadyStateChange() {
                     if (this.readyState == 4 && this.status == 200) {
 
-                        // add the response to the xhrs array
-                        interceptJs.xhrs.push(this);
+                        // add the call description (url, data and request) to the calls array
+                        interceptJs.calls.push({
+                            url: url,
+                            data: data,
+                            xhr: this,
+                        });
 
                         /* This is where you can put code that you want to execute post-complete*/
                         /* URL is kept in this._url */
@@ -96,7 +104,7 @@ var interceptJs = {
                     }
                 }
 
-                send.call(this, data);
+                $$.send.call(this, data);
             };
         })(XMLHttpRequest);
     },
@@ -219,7 +227,7 @@ var facebook_group_posts = {
                     obj['group']['name'] = d.name;
                     
                     //console.log('GROUP: ' + obj['group']['name']);
-                    
+
                     // name of the Facebook user who posted,
                     // link to the Facebook profile of such a user,
                     // URL of the picture of such a Facebook user.
@@ -285,14 +293,11 @@ var facebook_public_feed = {
                 t = '['+x+']';
                 j = JSON.parse(t)[0];
                 
-                if (x.startsWith('{"label":"CometNewsFeed_viewerConnection$stream$CometNewsFeed_viewer_news_feed"')) {
-                    o = j.data
+// TODO: ITERATE ALL EDGES
+                if (x.startsWith('{"data":{"serpResponse":{"results":{"edges":')) {
+                    o = j.data.serpResponse.results.edges[0];
                 }
                 
-                if (x.startsWith('{"data":{"viewer":{"news_feed":')) {
-                    // post
-                    o = j.data.viewer.news_feed.edges[0]; 
-                }
     
                 if (o != null) {
                     // add the raw json descriptor to the object
@@ -300,7 +305,7 @@ var facebook_public_feed = {
                     obj['raw'] = o;
 
                     //console.log('------------------');
-
+/*
                     // # of comments
                     obj['comments'] = o.node.comet_sections.feedback.story.feedback_context.feedback_target_with_context.ufi_renderer.feedback.total_comment_count
 
@@ -359,12 +364,12 @@ var facebook_public_feed = {
                     obj['group']['name'] = d.name;
                     
                     //console.log('GROUP: ' + obj['group']['name']);
-                    
+*/
                     // name of the Facebook user who posted,
                     // link to the Facebook profile of such a user,
                     // URL of the picture of such a Facebook user.
                     //let e = o.node.comet_sections.content.story.actors[0];
-                    let e = o.node.comet_sections.context_layout.story.comet_sections.actor_photo.story.actors[0];
+                    let e = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.content.story.comet_sections.context_layout.story.comet_sections.actor_photo.story.actors[0]
                     obj['lead'] = {}
                     obj['lead']['id'] = e.id;
                     obj['lead']['name'] = e.name;
