@@ -102,21 +102,25 @@ var interceptJs = {
     },
 };
 
-
 // An identifier can start with $, _, or any character in the Unicode categories
 // references: 
 // - https://stackoverflow.com/questions/1661197/what-characters-are-valid-for-javascript-variable-names
 // - https://mothereff.in/js-variables
 var $$ = interceptJs;
 
-
 // ----------------------------
+var facebook_group_posts = {
+    // browser must be located at this URL: https://www.facebook.com/?filter=groups&sk=h_chr
+    // perform an AJAX request to reload the list of posts.
+    load: function () {
+        // TODO: Code Me!
+    },
 
-$$.init({
-    parse: function(xhr) {
+    // process a response to a XHR request.
+    // if it is about a post, parse it and add it to the data array.
+    scrape: function (xhr) {
         // show the request url by default
-//console.log('- URL: ' + xhr._url);
-
+        //console.log('- URL: ' + xhr._url);
         var s = null; // complete response text 
         var x = null; // line response text
         var t = null; // response text wrapped in array
@@ -155,7 +159,7 @@ $$.init({
                     // for further analysis and debugging.
                     obj['raw'] = o;
 
-//console.log('------------------');
+                    //console.log('------------------');
 
                     // # of comments
                     obj['comments'] = o.node.comet_sections.feedback.story.feedback_context.feedback_target_with_context.ufi_renderer.feedback.total_comment_count
@@ -172,7 +176,7 @@ $$.init({
                         obj['body'] = null;
                     } else {
                         obj['body'] = a.text;
-//console.log('BODY: ' + obj['body']);
+                        //console.log('BODY: ' + obj['body']);
                     }
 
                     // URL of all photos in the post,
@@ -213,7 +217,9 @@ $$.init({
                     obj['group'] = {}
                     obj['group']['id'] = d.id;
                     obj['group']['name'] = d.name;
-//console.log('GROUP: ' + obj['group']['name']);
+                    
+                    //console.log('GROUP: ' + obj['group']['name']);
+                    
                     // name of the Facebook user who posted,
                     // link to the Facebook profile of such a user,
                     // URL of the picture of such a Facebook user.
@@ -239,22 +245,17 @@ $$.init({
                 }
             }
         }
+    },
+};
+
+// ----------------------------
+
+$$.init({
+    parse: function(xhr) {
+        facebook_group_posts.scrape(xhr);
     }
 });
 
 
-/*
-// ----------------------------
-var facebook = {
-    fgp: function () {
-        // go to https://www.facebook.com/?filter=groups&sk=h_chr
-        window.location.href = 'https://www.facebook.com/?filter=groups&sk=h_chr';
-        // and scroll down to load all posts
-        window.scrollTo(0,document.body.scrollHeight);
-    },
-}
 
 
-// ----------------------------
-facebook.fgp();
-*/
