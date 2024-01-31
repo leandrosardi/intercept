@@ -108,8 +108,6 @@ var $$ = interceptJs;
 
 // ----------------------------
 
-var h = null;
-
 $$.init({
     parse: function(xhr) {
         // show the request url by default
@@ -149,9 +147,12 @@ $$.init({
                 }
     
                 if (o != null) {
+                    // add the raw json descriptor to the object
+                    // for further analysis and debugging.
+                    obj['raw'] = o;
+
 //console.log('------------------');
                     // post content, 
-                    // TODO: VALIDATE MESSAGE IS NOT NULL
                     let a = o.node.comet_sections.content.story.message;
                     if (a == null) {
                         obj['body'] = null;
@@ -167,14 +168,12 @@ $$.init({
                     for (let i = 0; i < b.length; i++) {
                         // if it is an image, add it to the images array
                         let media = b[i].styles.attachment.media;
-                        if (media == null || media == undefined) {
-                            continue;
+                        if (media != null && media != undefined) {
+                            let img = media.photo_image;
+                            if (img != null && img != undefined) {
+                                obj['images'].push( img.uri );
+                            }                        
                         }
-                        let img = media.image;
-                        if (img == null || img == undefined) {
-                            continue;
-                        }                        
-                        obj['images'].push( img.uri );
                     }
 
                     // direct id or link to the post, 
@@ -215,3 +214,20 @@ $$.init({
         }
     }
 });
+
+
+/*
+// ----------------------------
+var facebook = {
+    fgp: function () {
+        // go to https://www.facebook.com/?filter=groups&sk=h_chr
+        window.location.href = 'https://www.facebook.com/?filter=groups&sk=h_chr';
+        // and scroll down to load all posts
+        window.scrollTo(0,document.body.scrollHeight);
+    },
+}
+
+
+// ----------------------------
+facebook.fgp();
+*/
