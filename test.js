@@ -297,7 +297,6 @@ var facebook_public_feed = {
                 if (x.startsWith('{"data":{"serpResponse":{"results":{"edges":')) {
                     o = j.data.serpResponse.results.edges[0];
                 }
-                
     
                 if (o != null) {
                     // add the raw json descriptor to the object
@@ -305,16 +304,16 @@ var facebook_public_feed = {
                     obj['raw'] = o;
 
                     //console.log('------------------');
-/*
+
                     // # of comments
-                    obj['comments'] = o.node.comet_sections.feedback.story.feedback_context.feedback_target_with_context.ufi_renderer.feedback.total_comment_count
+                    obj['comments'] = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.content.story.comet_sections.context_layout feedback.story.feedback_context.feedback_target_with_context.ufi_renderer.feedback.total_comment_count
 
                     // # of reactions
-                    obj['reactions'] = o.node.comet_sections.feedback.story.feedback_context.feedback_target_with_context.ufi_renderer.feedback.comet_ufi_summary_and_actions_renderer.feedback.i18n_reaction_count
+                    obj['reactions'] = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.feedback.story.feedback_context.feedback_target_with_context.ufi_renderer.feedback.comet_ufi_summary_and_actions_renderer.feedback.reaction_count.count
 
                     // # of shares
                     obj['shares'] = o.node.comet_sections.feedback.story.feedback_context.feedback_target_with_context.ufi_renderer.feedback.comet_ufi_summary_and_actions_renderer.feedback.i18n_share_count
-
+/*
                     // post content, 
                     let a = o.node.comet_sections.content.story.message;
                     if (a == null) {
