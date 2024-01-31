@@ -174,6 +174,16 @@ $$.init({
                                 obj['images'].push( img.uri );
                             }                        
                         }
+                        // if the is a list of sub-attachments, iterate it
+                        let subattachments = b[i].styles.attachment.all_subattachments;
+                        if (subattachments != null && subattachments != undefined) {
+                            for (let i2 = 0; i2 < subattachments.nodes.length; i2++) {
+                                let img = subattachments[i2].media.photo_image;
+                                if (img != null && img != undefined) {
+                                    obj['images'].push( img.uri );
+                                }                        
+                            }
+                        }
                     }
 
                     // direct id or link to the post, 
