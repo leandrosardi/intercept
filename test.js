@@ -257,7 +257,6 @@ var facebook_group_posts = {
 };
 
 // ----------------------------
-var aux = null;
 var facebook_public_feed = {
     // browser must be located at this URL: https://www.facebook.com/?filter=groups&sk=h_chr
     // perform an AJAX request to reload the list of posts.
@@ -279,13 +278,6 @@ var facebook_public_feed = {
         var obj = {}; // response json in massprospecting format 
 
         //console.log("Ready URL: " + xhr._url);
-/*
-if (xhr.responseText.includes('BOOK BINDING LINE')) {
-    aux = xhr;
-    $$.pause();
-    console.log('DONE')            
-}        
-*/
         if (xhr._url == '/api/graphql/') {
             s = xhr.responseText;
             // facebook uses to return many json objects in one response, so we need to split the response by newline
@@ -293,24 +285,35 @@ if (xhr.responseText.includes('BOOK BINDING LINE')) {
             // iterate array ar
             for (let z = 0; z < ar.length; z++) {
                 x = ar[z];
-                // set obj to empty object
-                obj = {};
+                
                 // JSON is not a valid json, you must wrap it in array.
                 // reference: https://stackoverflow.com/questions/51172387/json-parse-unexpected-non-whitespace-character-after-json-data-at-line-1-column
                 t = '['+x+']';
                 j = JSON.parse(t)[0];
-                if (x.startsWith('{"data":{"serpResponse":{"results":{"edges":')) {
+
+// log the first 50 chars of x
+//console.log('------------------');
+//console.log(x.substring(0, 50));
+//console.log(x.includes('BOOK BINDING LINE'));
+
+                if (x.startsWith('{"data":{"serpResponse":{"results":{"edges":') == false) {
+//console.log('not matched')
+                } else {
+//console.log('matched')
                     edges = j.data.serpResponse.results.edges;
     
                     // iterate array edges
                     for (let i0 = 0; i0 < edges.length; i0++) {
+//console.log(' - edge #' + i0);
                         o = edges[i0];
-                        
+
+                        // set obj to empty object
+                        obj = {};
+
                         // add the raw json descriptor to the object
                         // for further analysis and debugging.
                         obj['raw'] = o;
-//console.log('------------------');
-//console.log('ROLE:'+o.node.role);
+
                         // # of comments
                         obj['comments'] = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.feedback.story.feedback_context.feedback_target_with_context.ufi_renderer.feedback.comet_ufi_summary_and_actions_renderer.feedback.comments_count_summary_renderer.feedback.total_comment_count
 
@@ -331,7 +334,7 @@ if (xhr.responseText.includes('BOOK BINDING LINE')) {
                                 //console.log('BODY: ' + obj['body']);
                             }
                         }
-
+//console.log(' - body: ' + obj['body'].substring(0, 50).split('\n').join(' - ') + '...');
                         // URL of all photos in the post,
                         let b = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.content.story.attachments;
                         obj['images'] = [];
@@ -359,15 +362,11 @@ if (xhr.responseText.includes('BOOK BINDING LINE')) {
                                 }
                             } // end if attachment
                         } // end for attachments
-                        
+
                         // direct id or link to the post, 
-                        let c = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.feedback.story.shareable_from_perspective_of_feed_ufi.post_id;
+                        let c = o.relay_rendering_strategy.view_model.click_model.story.post_id                         
                         obj['post_id'] = c;
-//console.log('POST_ID:'+obj['post_id']);
-//// add o to aux if c is undefined
-//if (c == undefined) {
-//    aux.push(o);
-//}
+//console.log(' - post_id: ' + obj['post_id']);
                         // direct id or link to the Facebook group where such content has been posted,
                         // name of the facebook groups
                         let d = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.context_layout.story.comet_sections.actor_photo.story.to;
@@ -401,7 +400,9 @@ if (xhr.responseText.includes('BOOK BINDING LINE')) {
                         // add this result to the data array
                         //
                         // if it is a reel, it is not a post from a lead (eg: a reel from a page)
-                        if (obj['lead'] != null) {
+                        if (obj['lead'] == null) {
+//console.log('lead not found :(')
+                        } else {
                             let exists = false;
                             for (let i = 0; i < $$.data.length; i++) {
                                 if ($$.data[i]['post_id'] == obj['post_id']) {
@@ -410,6 +411,7 @@ if (xhr.responseText.includes('BOOK BINDING LINE')) {
                             }
     
                             if (!exists) {
+//console.log(' - added!');
                                 $$.push(obj);
                             }    
                         }
