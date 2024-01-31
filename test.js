@@ -306,23 +306,23 @@ var facebook_public_feed = {
                     //console.log('------------------');
 
                     // # of comments
-                    obj['comments'] = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.content.story.comet_sections.context_layout feedback.story.feedback_context.feedback_target_with_context.ufi_renderer.feedback.total_comment_count
+                    obj['comments'] = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.feedback.story.feedback_context.feedback_target_with_context.ufi_renderer.feedback.comet_ufi_summary_and_actions_renderer.feedback.comments_count_summary_renderer.feedback.total_comment_count
 
                     // # of reactions
                     obj['reactions'] = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.feedback.story.feedback_context.feedback_target_with_context.ufi_renderer.feedback.comet_ufi_summary_and_actions_renderer.feedback.reaction_count.count
 
                     // # of shares
-                    obj['shares'] = o.node.comet_sections.feedback.story.feedback_context.feedback_target_with_context.ufi_renderer.feedback.comet_ufi_summary_and_actions_renderer.feedback.i18n_share_count
-/*
+                    obj['shares'] = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.feedback.story.feedback_context.feedback_target_with_context.ufi_renderer.feedback.comet_ufi_summary_and_actions_renderer.feedback.i18n_share_count
+
                     // post content, 
-                    let a = o.node.comet_sections.content.story.message;
+                    let a = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.content.story.comet_sections.message.story.message
                     if (a == null) {
                         obj['body'] = null;
                     } else {
                         obj['body'] = a.text;
                         //console.log('BODY: ' + obj['body']);
                     }
-
+/*
                     // URL of all photos in the post,
                     let b = o.node.comet_sections.content.story.attachments; 
                     obj['images'] = [];
