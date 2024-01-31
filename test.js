@@ -279,7 +279,13 @@ var facebook_public_feed = {
         var obj = {}; // response json in massprospecting format 
 
         //console.log("Ready URL: " + xhr._url);
-
+/*
+if (xhr.responseText.includes('BOOK BINDING LINE')) {
+    aux = xhr;
+    $$.pause();
+    console.log('DONE')            
+}        
+*/
         if (xhr._url == '/api/graphql/') {
             s = xhr.responseText;
             // facebook uses to return many json objects in one response, so we need to split the response by newline
@@ -293,20 +299,18 @@ var facebook_public_feed = {
                 // reference: https://stackoverflow.com/questions/51172387/json-parse-unexpected-non-whitespace-character-after-json-data-at-line-1-column
                 t = '['+x+']';
                 j = JSON.parse(t)[0];
-                
                 if (x.startsWith('{"data":{"serpResponse":{"results":{"edges":')) {
                     edges = j.data.serpResponse.results.edges;
     
                     // iterate array edges
                     for (let i0 = 0; i0 < edges.length; i0++) {
                         o = edges[i0];
-
+                        
                         // add the raw json descriptor to the object
                         // for further analysis and debugging.
                         obj['raw'] = o;
-
-                        //console.log('------------------');
-
+//console.log('------------------');
+//console.log('ROLE:'+o.node.role);
                         // # of comments
                         obj['comments'] = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.feedback.story.feedback_context.feedback_target_with_context.ufi_renderer.feedback.comet_ufi_summary_and_actions_renderer.feedback.comments_count_summary_renderer.feedback.total_comment_count
 
@@ -317,7 +321,7 @@ var facebook_public_feed = {
                         obj['shares'] = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.feedback.story.feedback_context.feedback_target_with_context.ufi_renderer.feedback.comet_ufi_summary_and_actions_renderer.feedback.i18n_share_count
 
                         // post content, 
-                        let a0 = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.content.story.comet_sections.message
+                        let a0 = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.content
                         if (a0 != null && a0 != undefined) {
                             let a = a0.story.message
                             if (a == null) {
@@ -359,16 +363,23 @@ var facebook_public_feed = {
                         // direct id or link to the post, 
                         let c = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.feedback.story.shareable_from_perspective_of_feed_ufi.post_id;
                         obj['post_id'] = c;
-                        /*
+//console.log('POST_ID:'+obj['post_id']);
+//// add o to aux if c is undefined
+//if (c == undefined) {
+//    aux.push(o);
+//}
                         // direct id or link to the Facebook group where such content has been posted,
                         // name of the facebook groups
-                        let d = o.node.comet_sections.context_layout.story.comet_sections.actor_photo.story.to;
-                        obj['group'] = {}
-                        obj['group']['id'] = d.id;
-                        obj['group']['name'] = d.name;
-                        
+                        let d = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.context_layout.story.comet_sections.actor_photo.story.to;
+                        obj['group'] = null;
+                        if (d != null && d != undefined) {
+                            obj['group'] = {}
+                            obj['group']['id'] = d.id;
+                            obj['group']['name'] = d.name;
+                        }
+
                         //console.log('GROUP: ' + obj['group']['name']);
-                        */
+                        
                         // name of the Facebook user who posted,
                         // link to the Facebook profile of such a user,
                         // URL of the picture of such a Facebook user.
@@ -413,10 +424,39 @@ var facebook_public_feed = {
 
 $$.init({
     parse: function(xhr) {
-        facebook_group_posts.scrape(xhr);
+        facebook_public_feed.scrape(xhr);
     }
 });
 
 
 
+// Selenium: How to Inject/execute a Javascript in to a Page before loading/executing any other scripts of the page?
+// reference: https://stackoverflow.com/questions/31354352/selenium-how-to-inject-execute-a-javascript-in-to-a-page-before-loading-executi
+/*
+old = window.onload;
+window.location.href = 'https://www.facebook.com/?filter=groups&sk=h_chr';
+window.onload = function() {
+    // call the original onload event
+    if (old != null) {
+        old();
+    }
+    // add some code to the onload event
+    console.log('injected code!');
+};
+*/
+
+/*
+// inject a script into the page on load
+window.onload = function() {
+    // inject a script into the page
+    var s = document.createElement('script');
+    //s.src = chrome.extension.getURL('test.js');
+    //s.src = 'https://raw.githubusercontent.com/rodrigopivi/intercept.js/master/test.js';
+    s.innerHTML = "console.log('injected!');";
+    //s.onload = function() {
+    //    this.remove();
+    //};
+    (document.head || document.documentElement).appendChild(s);
+}
+*/
 
