@@ -350,11 +350,11 @@ var facebook_public_feed = {
                             }
                         } // end if attachment
                     }
-/*
+                    
                     // direct id or link to the post, 
-                    let c = o.node.post_id;
+                    let c = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.feedback.story.shareable_from_perspective_of_feed_ufi.post_id;
                     obj['post_id'] = c;
-
+/*
                     // direct id or link to the Facebook group where such content has been posted,
                     // name of the facebook groups
                     let d = o.node.comet_sections.context_layout.story.comet_sections.actor_photo.story.to;
