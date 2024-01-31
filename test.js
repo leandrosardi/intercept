@@ -322,9 +322,9 @@ var facebook_public_feed = {
                         obj['body'] = a.text;
                         //console.log('BODY: ' + obj['body']);
                     }
-/*
+
                     // URL of all photos in the post,
-                    let b = o.node.comet_sections.content.story.attachments; 
+                    let b = o.relay_rendering_strategy.view_model.click_model.story.comet_sections.content.story.attachments;
                     obj['images'] = [];
                     // iterate array b
                     for (let i = 0; i < b.length; i++) {
@@ -350,7 +350,7 @@ var facebook_public_feed = {
                             }
                         } // end if attachment
                     }
-
+/*
                     // direct id or link to the post, 
                     let c = o.node.post_id;
                     obj['post_id'] = c;
