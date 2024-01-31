@@ -152,6 +152,16 @@ $$.init({
                     obj['raw'] = o;
 
 //console.log('------------------');
+
+                    // # of comments
+                    obj['comments'] = o.node.comet_sections.feedback.story.feedback_context.feedback_target_with_context.ufi_renderer.feedback.total_comment_count
+
+                    // # of reactions
+                    obj['reactions'] = o.node.comet_sections.feedback.story.feedback_context.feedback_target_with_context.ufi_renderer.feedback.comet_ufi_summary_and_actions_renderer.feedback.i18n_reaction_count
+
+                    // # of shares
+                    obj['shares'] = o.node.comet_sections.feedback.story.feedback_context.feedback_target_with_context.ufi_renderer.feedback.comet_ufi_summary_and_actions_renderer.feedback.i18n_share_count
+
                     // post content, 
                     let a = o.node.comet_sections.content.story.message;
                     if (a == null) {
@@ -167,23 +177,26 @@ $$.init({
                     // iterate array b
                     for (let i = 0; i < b.length; i++) {
                         // if it is an image, add it to the images array
-                        let media = b[i].styles.attachment.media;
-                        if (media != null && media != undefined) {
-                            let img = media.photo_image;
-                            if (img != null && img != undefined) {
-                                obj['images'].push( img.uri );
-                            }                        
-                        }
-                        // if the is a list of sub-attachments, iterate it
-                        let subattachments = b[i].styles.attachment.all_subattachments;
-                        if (subattachments != null && subattachments != undefined) {
-                            for (let i2 = 0; i2 < subattachments.nodes.length; i2++) {
-                                let img = subattachments.nodes[i2].media.image;
+                        let attachment = b[i].styles.attachment;
+                        if (attachment != null && attachment != undefined) {
+                            let media = attachment.media;
+                            if (media != null && media != undefined) {
+                                let img = media.photo_image;
                                 if (img != null && img != undefined) {
                                     obj['images'].push( img.uri );
                                 }                        
                             }
-                        }
+                            // if the is a list of sub-attachments, iterate it
+                            let subattachments = attachment.all_subattachments;
+                            if (subattachments != null && subattachments != undefined) {
+                                for (let i2 = 0; i2 < subattachments.nodes.length; i2++) {
+                                    let img = subattachments.nodes[i2].media.image;
+                                    if (img != null && img != undefined) {
+                                        obj['images'].push( img.uri );
+                                    }                        
+                                }
+                            }
+                        } // end if attachment
                     }
 
                     // direct id or link to the post, 
