@@ -1,5 +1,9 @@
 /*
+FGP
 https://www.facebook.com/?filter=groups&sk=h_chr
+FPF
+https://www.facebook.com/search/posts?q=marketing&filters=eyJyZWNlbnRfcG9zdHM6MCI6IntcIm5hbWVcIjpcInJlY2VudF9wb3N0c1wiLFwiYXJnc1wiOlwiXCJ9In0%3D
+LPF
 https://www.linkedin.com/search/results/content/?keywords=%22I%20attended%22%20or%20%22I%20just%20attended%22&origin=GLOBAL_SEARCH_HEADER&sid=w.y&sortBy=%22date_posted%22
 */
 
