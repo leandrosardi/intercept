@@ -1,7 +1,12 @@
 **THIS LIBRARY IS UNDER CONSTRUCTION**
 
 # intercept.js
-Intercept AJAX / XHR calls for data extraction / scraping.
+
+Intercept AJAX / XHR calls performed by a website in order to:
+
+1. reverse engineering of a website's protocols, and 
+
+2. perform data extraction (a.k.a scraping).
 
 **Outline:**
 
