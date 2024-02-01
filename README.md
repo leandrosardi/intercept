@@ -1,3 +1,5 @@
+![GitHub issues](https://img.shields.io/github/issues/leandrosardi/intercept) ![GitHub](https://img.shields.io/github/license/leandrosardi/intercept) ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/leandrosardi/intercept) ![GitHub last commit](https://img.shields.io/github/last-commit/leandrosardi/intercept)
+
 # intercept.js
 
 Intercept AJAX / XHR calls performed by a website in order to:
