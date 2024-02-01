@@ -1,5 +1,3 @@
-**THIS LIBRARY IS UNDER CONSTRUCTION**
-
 # intercept.js
 
 Intercept AJAX / XHR calls performed by a website in order to:
