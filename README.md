@@ -14,3 +14,27 @@ Intercept AJAX / XHR calls for data extraction / scraping.
 3. Press CTRL+SHIFT+I to open the Developer Tools:
 
 ![Scraping Facebook Posts](./docu/pics/scraping-facebook-posts-2.png)
+
+4. Inject **intercept.js** the the webpage.
+
+In the console tab, paste [the source code of **intercept.js**](https://github.com/leandrosardi/intercept/blob/main/lib/intercept.js) and press ENTER.
+
+![Scraping Facebook Posts](./docu/pics/scraping-facebook-posts-3.png)
+
+5. Initialize **intercept.js**:
+
+```javascript
+$$.init();
+```
+
+![Scraping Facebook Posts](./docu/pics/scraping-facebook-posts-4.png)
+
+6. Scroll down to load new posts, and see the URLs of the AJAX calls in the console.
+
+![Scraping Facebook Posts](./docu/pics/scraping-facebook-posts-5.png)
+
+
+## 2. Processing AJAX Responses
+
+_pending to write_
+
