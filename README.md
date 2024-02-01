@@ -3,6 +3,13 @@
 # intercept.js
 Intercept AJAX / XHR calls for data extraction / scraping.
 
+**Outline:**
+
+1. [Getting Started](#1-getting-started)
+2. [Processing AJAX Responses](#2-processing-ajax-responses)
+3. [Working with Selnium](#3-working-with-selenium)
+4. [Disclaimer](#disclaimer)
+
 ## 1. Getting Started
 
 1. Open a browser where you can access your Facebook profile.
@@ -38,7 +45,7 @@ $$.init();
 
 _pending to write_
 
-## 3. Injecting with Selenium
+## 3. Working with Selenium
 
 _pending to write_
 
