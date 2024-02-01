@@ -8,8 +8,9 @@ Intercept AJAX / XHR calls for data extraction / scraping.
 1. [Getting Started](#1-getting-started)
 2. [Processing AJAX Responses](#2-processing-ajax-responses)
 3. [Pause Interception](#3-pause-interception)
-4. [Working with Selnium](#4-working-with-selenium)
-5. [Disclaimer](#disclaimer)
+4. [Debug Mode](#4-debug-mode)
+5. [Working with Selnium](#5-working-with-selenium)
+6. [Disclaimer](#disclaimer)
 
 ## 1. Getting Started
 
@@ -99,11 +100,45 @@ $$.play();
 You can check if interception is running or not:
 
 ```javascript
-$$.paused
+$$._paused
 // => true
 ```
 
-## 4. Working with Selenium
+## 4. Debug Mode
+
+You can request **intercept.js** to store all the requests and their responses into an array.
+
+```javascript
+$$.debug(true);
+```
+
+You can also define the debugging mode when initialize:
+
+```javascript
+$$.init({
+    debug: true,
+    parse: function(xhr) {
+        // ...
+    }
+});
+```
+
+Such a feature is useful for developers, when they are performing reverse engieering of a website.
+
+```javascript
+$$.calls.length
+// => 64
+
+$$.calls[0].url
+// => '/ajax/navigation/'
+```
+
+![Scraping Facebook Posts](./docu/pics/scraping-facebook-posts-7.png)
+
+
+Such a feature is resourses consuming too, and it should keep disabled in production environment.
+
+## 5. Working with Selenium
 
 _pending to write_
 
