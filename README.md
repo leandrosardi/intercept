@@ -38,3 +38,11 @@ $$.init();
 
 _pending to write_
 
+## 3. Injecting with Selenium
+
+_pending to write_
+
+## Disclaimer
+
+Use this library at your own risk.
+
