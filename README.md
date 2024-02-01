@@ -135,6 +135,12 @@ $$.calls[0].url
 
 ![Scraping Facebook Posts](./docu/pics/scraping-facebook-posts-7.png)
 
+You can check if **intercept.js** is running in debug mode or not:
+
+```javascript
+$$._debug
+// => false
+```
 
 Such a feature is resourses consuming too, and it should keep disabled in production environment.
 
