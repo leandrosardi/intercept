@@ -2,11 +2,11 @@
 
 # intercept.js
 
-Intercept AJAX / XHR calls performed by a website in order to:
+A JavaScript library for intercepting AJAX / XHR calls performed by a website in order to:
 
-1. reverse engineering of a website's protocols, and 
+1. perform reverse engineering of a website's communication between its front-end and back-end; and 
 
-2. perform data extraction (a.k.a scraping).
+2. perform data extraction (a.k.a scraping) of such a website.
 
 **Outline:**
 
