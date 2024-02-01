@@ -24,6 +24,7 @@ $$.init({
                     let a = j.data.node.comet_sections.content.story.message;
                     if (a != null) {
                         console.log('POST: ' + a.text);
+                        $$.push(a.text);
                     }
                 }
             }

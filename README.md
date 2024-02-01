@@ -88,6 +88,13 @@ $$.init({
 
 ![Scraping Facebook Posts](./docu/pics/scraping-facebook-posts-6.png)
 
+Additioonally to logging the contents, you can store them into the `$$.data` array.
+
+```javascript
+console.log('POST: ' + a.text);
+$$.push(a.text);
+```
+
 ## 3. Pause Interception
 
 You can pause interception:
