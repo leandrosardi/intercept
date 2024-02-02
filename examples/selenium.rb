@@ -50,7 +50,7 @@ l.logf "done".green
 # - https://www.selenium.dev/documentation/webdriver/bidirectional/chrome_devtools/cdp_endpoint/
 # 
 l.logs "Injecting the library into the page... "
-driver.execute_cdp("Page.addScriptToEvaluateOnNewDocument", source: '$$.reset();'+js1+js2)
+driver.execute_cdp("Page.addScriptToEvaluateOnNewDocument", source: js1+js2)
 l.logf "done".green
 
 # Get the URL to scrape
@@ -66,6 +66,11 @@ l.logf "done".green
 # wait for the page to load
 l.logs "Waiting for the page to load... "
 sleep(5)
+l.logf "done".green
+
+# reset the intercepter
+l.logs "Resetting the intercepter... "
+driver.execute_script('$$.reset();')
 l.logf "done".green
 
 # click to load posts with ajax, by clicking on an anchor with href='/?filter=groups&sk=h_chr'
