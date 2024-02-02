@@ -18,15 +18,34 @@ $$.init({
                 // JSON is not a valid json, you must wrap it in array.
                 t = '['+x+']';
                 j = JSON.parse(t)[0];
+                o = null;
 
                 if (x.startsWith('{"label":"CometNewsFeed_viewerConnection$stream$CometNewsFeed_viewer_news_feed"')) {
-
-                    let a = j.data.node.comet_sections.content.story.message;
-                    if (a != null) {
-                        console.log('POST: ' + a.text);
-                        $$.push(a.text);
-                    }
+                    o = j.data
                 }
+                
+                if (x.startsWith('{"data":{"viewer":{"news_feed":')) {
+                    // post
+                    o = j.data.viewer.news_feed.edges[0]; 
+                }
+
+                if (o != null) {
+                    // post content, 
+                    let a = o.node.comet_sections.content.story.message;
+                    if (a != null) {
+                        // if not exists and object into $$.data with the same post_id,
+                        // add this result to the data array
+                        let exists = false;
+                        for (let i = 0; i < $$.data.length; i++) {
+                            if ($$.data[i] == a) {
+                                exists = true;
+                            }
+                        } // end for
+                        if (!exists) {
+                            $$.push(a);
+                        } // end if
+                    } // end if
+                } // end if
             }
         } 
     }

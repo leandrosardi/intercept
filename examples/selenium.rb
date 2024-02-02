@@ -38,3 +38,7 @@ url = 'https://www.facebook.com/?filter=groups&sk=h_chr'
 
 # Open the URL
 driver.get(url)
+
+# wait for the page to load
+sleep(5)
+
