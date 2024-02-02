@@ -13,9 +13,9 @@ JavaScript library for intercepting AJAX / XHR calls performed by a website in o
 1. [Getting Started](#1-getting-started)
 2. [Processing AJAX Responses](#2-processing-ajax-responses)
 3. [Gathering Data](#3-gathering-data)
-4. [Pause Interception](#3-pause-interception)
-5. [Debug Mode](#4-debug-mode)
-6. [Working with Selnium](#5-working-with-selenium)
+4. [Pause Interception](#4-pause-interception)
+5. [Debug Mode](#5-debug-mode)
+6. [Working with Selnium](#6-working-with-selenium)
 7. [Disclaimer](#disclaimer)
 
 ## 1. Getting Started
