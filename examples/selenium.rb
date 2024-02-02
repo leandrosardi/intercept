@@ -1,6 +1,6 @@
 require 'net/http'
-require 'adspower-client'
 require 'json'
+require 'adspower-client'
 require 'simple_cloud_logging'
 require 'colorize'
 
@@ -35,7 +35,7 @@ l.logf "done".green
 
 # Get the source code of the scraper
 l.logs "Getting source code of the scraper... "
-uri = URI.parse('https://raw.githubusercontent.com/leandrosardi/intercept/main/lib/facebook_group_posts.js')
+uri = URI.parse('https://raw.githubusercontent.com/leandrosardi/intercept/main/examples/facebook_group_posts.js')
 js2 = Net::HTTP.get(uri)
 l.logf "done".green
 
@@ -70,7 +70,7 @@ sleep(5)
 l.logf "done".green
 
 # reset the intercepter
-l.logs "Resetting the intercepter... "
+l.logs "Resetting the interceptor... "
 driver.execute_script('$$.reset();')
 l.logf "done".green
 

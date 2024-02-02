@@ -217,7 +217,7 @@ js1 = Net::HTTP.get(uri)
 5. Get the source code of the scraper:
 
 ```ruby
-uri = URI.parse('https://raw.githubusercontent.com/leandrosardi/intercept/main/lib/facebook_group_posts.js')
+uri = URI.parse('https://raw.githubusercontent.com/leandrosardi/intercept/main/examples/facebook_group_posts.js')
 js2 = Net::HTTP.get(uri)
 ```
 
