@@ -12,10 +12,11 @@ JavaScript library for intercepting AJAX / XHR calls performed by a website in o
 
 1. [Getting Started](#1-getting-started)
 2. [Processing AJAX Responses](#2-processing-ajax-responses)
-3. [Pause Interception](#3-pause-interception)
-4. [Debug Mode](#4-debug-mode)
-5. [Working with Selnium](#5-working-with-selenium)
-6. [Disclaimer](#disclaimer)
+3. [Gathering Data](#3-gathering-data)
+4. [Pause Interception](#3-pause-interception)
+5. [Debug Mode](#4-debug-mode)
+6. [Working with Selnium](#5-working-with-selenium)
+7. [Disclaimer](#disclaimer)
 
 ## 1. Getting Started
 
@@ -95,7 +96,23 @@ console.log('POST: ' + a.text);
 $$.push(a.text);
 ```
 
-## 3. Pause Interception
+## 3. Gathering Data
+
+Every time you call the `$$.push` metod you add an element into the array `$$.data`
+
+```javascript
+console.log($$.data.length);
+// => 1
+```
+
+You can clean up both arrays: `$$.data` and `$$.calls` by calling the `$$.reset` method:
+
+```javascript
+$$.reset();
+```
+
+
+## 4. Pause Interception
 
 You can pause interception:
 
@@ -116,7 +133,7 @@ $$._paused
 // => true
 ```
 
-## 4. Debug Mode
+## 5. Debug Mode
 
 You can request **intercept.js** to store all the requests and their responses into an array.
 
@@ -156,7 +173,7 @@ $$._debug
 
 Such a feature is resourses consuming too, and it should keep disabled in production environment.
 
-## 5. Working with Selenium
+## 6. Working with Selenium
 
 _pending to write_
 
