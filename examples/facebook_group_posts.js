@@ -33,16 +33,17 @@ $$.init({
                     // post content, 
                     let a = o.node.comet_sections.content.story.message;
                     if (a != null) {
+                        txt = a.text
                         // if not exists and object into $$.data with the same post_id,
                         // add this result to the data array
                         let exists = false;
                         for (let i = 0; i < $$.data.length; i++) {
-                            if ($$.data[i] == a) {
+                            if ($$.data[i] == txt) {
                                 exists = true;
                             }
                         } // end for
                         if (!exists) {
-                            $$.push(a);
+                            $$.push(txt);
                         } // end if
                     } // end if
                 } // end if
