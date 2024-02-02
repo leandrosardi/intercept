@@ -27,15 +27,16 @@ l.logs "Starting and Operating browser... "
 driver = client.driver(id)
 l.logf "done".green
 
-# Get source code of inject.js library using OpenURI library
-l.logs "Getting source code of inject.js library... "
+# Get source code of intercept.js library
+l.logs "Getting source code of intercept.js library... "
 uri = URI.parse('https://raw.githubusercontent.com/leandrosardi/intercept/main/lib/intercept.js')
 js1 = Net::HTTP.get(uri)
 l.logf "done".green
 
 # Get the source code of the scraper
 l.logs "Getting source code of the scraper... "
-js2 = File.read('./facebook_group_posts.js')
+uri = URI.parse('https://raw.githubusercontent.com/leandrosardi/intercept/main/lib/facebook_group_posts.js')
+js2 = Net::HTTP.get(uri)
 l.logf "done".green
 
 # Execute the scraper

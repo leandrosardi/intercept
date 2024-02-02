@@ -175,7 +175,97 @@ Such a feature is resourses consuming too, and it should keep disabled in produc
 
 ## 6. Working with Selenium
 
-_pending to write_
+You can automate your web-scraping using [**Selenium**](https://www.selenium.dev/documentation/), injecting the **intercept.js** library using the [Chrome DevTools Protocol](https://www.selenium.dev/documentation/webdriver/bidirectional/chrome_devtools/cdp_endpoint/) (a.k.a. **CDP**).
+
+You can find a full example [here](https://github.com/leandrosardi/intercept/blob/main/examples/selenium.rb). 
+
+- Such an example is written in **Ruby**, but you can use any other lenguage like **Phyton** if you want.
+
+- Such an example is using [AdsPower Client](https://github.com/leandrosardi/adspower-client) to operate stealth browsers, but you can use the old fashion Selenium/Webdriver if you want. 
+
+In this secton, we explain [such an example](https://github.com/leandrosardi/intercept/blob/main/examples/selenium.rb) line by line.
+
+
+1. In your Ruby script, include the requried libraries:
+
+```ruby
+require 'net/http'
+require 'json'
+require 'adspower-client'
+```
+
+2. Create the AdsPower client:
+
+```ruby
+key = '*************8c95acbf*************'
+client = AdsPowerClient.new(key: key);
+```
+
+3. Start the browser:
+
+```ruby
+id = 'jdu****'
+driver = client.driver(id)
+```
+
+4. Get source code of intercept.js library:
+
+```ruby
+uri = URI.parse('https://raw.githubusercontent.com/leandrosardi/intercept/main/lib/intercept.js')
+js1 = Net::HTTP.get(uri)
+```
+5. Get the source code of the scraper:
+
+```ruby
+uri = URI.parse('https://raw.githubusercontent.com/leandrosardi/intercept/main/lib/facebook_group_posts.js')
+js2 = Net::HTTP.get(uri)
+```
+
+6. Injecting the library into the browser using CDP:
+
+```ruby
+driver.execute_cdp("Page.addScriptToEvaluateOnNewDocument", source: js1+js2)
+```
+
+7. Get the URL to scrape:
+
+```ruby
+url = 'https://www.facebook.com/?filter=groups&sk=h_chr'
+driver.get(url)
+```
+
+8. Waiting for the page to load:
+
+```ruby
+sleep(5)
+```
+
+9. Reset the interceptor:
+
+```ruby
+driver.execute_script('$$.reset();')
+```
+
+10. Clicking to load posts with ajax:
+
+
+```ruby
+a = driver.find_element(:css, 'a[href="/?filter=groups&sk=h_chr"]')
+a.click
+```
+
+11. Waiting for the AJAX to load:
+
+```ruby
+sleep(5)
+```
+
+12. Getting the list of scraped posts:
+
+```ruby
+s = driver.execute_script('return JSON.stringify($$.data)')
+arr = JSON.parse(s)
+```
 
 ## Disclaimer
 
